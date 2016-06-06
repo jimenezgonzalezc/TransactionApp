@@ -78,16 +78,22 @@ class TransactionController extends Controller
     /**
      * Change the state of a resource.
      *
-     * @param  Request $request
+     * @param  $id
      * @return Response
      */
-    public function changeState(Request $request) {
-        $transaction = Transaction::find($request->input('id'));
+    public function changeState($id) {
+        $transaction = Transaction::find($id);
+        $state = $transaction->state;
 
-        $transaction->estado = $request->input('state');
+        if ($state)
+            $transaction->state = false;
+        else
+            $transaction->state = true;
 
         $transaction->save();
 
         return response()->json($transaction);
     }
+
+
 }

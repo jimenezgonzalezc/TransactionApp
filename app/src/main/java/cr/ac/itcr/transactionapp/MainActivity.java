@@ -13,7 +13,9 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import cr.ac.itcr.transactionapp.api.TransactionApiService;
 import cr.ac.itcr.transactionapp.api.UserApiService;
+import cr.ac.itcr.transactionapp.entity.Transaction;
 import cr.ac.itcr.transactionapp.entity.User;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,15 +38,35 @@ public class MainActivity extends AppCompatActivity {
 //            e.printStackTrace();
 //        }
 
-        UserApiService userGetService = new UserApiService();
-        User user = new User();
-        user.setId(7);
-        user.setUser("manfred");
-        user.setEmail("manfred@gmail.com");
-        user.setPassword("123");
-        user.setDebit(50000);
-        boolean inser = userGetService.Update(user);
-        Log.d("update user", String.valueOf(inser));
+        TransactionApiService transactionGetService = new TransactionApiService();
+        Transaction transaction = new Transaction();
+        transaction.setId(5);
+        boolean inser = transactionGetService.ChangeState(transaction);
+        Log.d("Delete user", String.valueOf(inser));
+
+
+//        TransactionApiService transactionGetService = new TransactionApiService();
+//        Transaction transaction = new Transaction();
+//        //transaction.setId(1);
+//        transaction.setUser_id(2);
+//        transaction.setDate("6/5/2016");
+//        transaction.setType(true);
+//        transaction.setAmount(1);
+//        transaction.setState(true);
+//        boolean inser = transactionGetService.Save(transaction);
+//        Log.d("Save transaction", String.valueOf(inser));
+
+
+//        TransactionApiService transactionGetService = new TransactionApiService();
+//        Transaction transaction = new Transaction();
+//        transaction.setId(1);
+//        transaction.setUser_id(1);
+//        transaction.setDate("6/5/2016");
+//        transaction.setType(true);
+//        transaction.setAmount(1000);
+//        transaction.setState(true);
+//        boolean inser = transactionGetService.Update(transaction);
+//        Log.d("update transaction", String.valueOf(inser));
     }
 
     @Override

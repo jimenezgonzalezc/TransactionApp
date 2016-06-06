@@ -17,5 +17,6 @@ public interface IApi<Object> {
     public ArrayList<Object> GetAll() throws ExecutionException, InterruptedException;
 
 //    public ArrayList<Object> GetBy(Object object);
+    public boolean ChangeState(Object object);
 
 }

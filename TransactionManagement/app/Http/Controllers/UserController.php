@@ -49,7 +49,7 @@ class UserController extends Controller
 
         $user->user = $request->input('user');
         $user->email = $request->input('email');
-        $user->pass = $request->input('pass');
+        $user->password = $request->input('password');
         $user->debit = $request->input('debit');
 
         $user->save();
