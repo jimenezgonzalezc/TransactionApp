@@ -27,34 +27,43 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        UserApiService userGetService = new UserApiService();
-//        ArrayList<User> listPlaces;
-//        try {
-//            listPlaces = userGetService.GetAll();
-//            Log.d("get all", String.valueOf(listPlaces.size()));
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
 
+/*
+
+       UserApiService userGetService = new UserApiService();
+       ArrayList<User> listPlaces;
+       try {
+            listPlaces = userGetService.GetAll();
+            Log.d("get all", String.valueOf(listPlaces.size()));
+       } catch (ExecutionException e) {
+          e.printStackTrace();
+       } catch (InterruptedException e) {
+            e.printStackTrace();
+       }
+*/
+
+
+     /*
+         TransactionApiService transactionGetService = new TransactionApiService();
+         Transaction transaction = new Transaction();
+         transaction.setId(5);
+         boolean inser = transactionGetService.ChangeState(transaction);
+         Log.d("Delete user", String.valueOf(inser));
+     */
+
+
+        /*
         TransactionApiService transactionGetService = new TransactionApiService();
         Transaction transaction = new Transaction();
-        transaction.setId(5);
-        boolean inser = transactionGetService.ChangeState(transaction);
-        Log.d("Delete user", String.valueOf(inser));
-
-
-//        TransactionApiService transactionGetService = new TransactionApiService();
-//        Transaction transaction = new Transaction();
-//        //transaction.setId(1);
-//        transaction.setUser_id(2);
-//        transaction.setDate("6/5/2016");
-//        transaction.setType(true);
-//        transaction.setAmount(1);
-//        transaction.setState(true);
-//        boolean inser = transactionGetService.Save(transaction);
-//        Log.d("Save transaction", String.valueOf(inser));
+        //transaction.setId(1);
+        transaction.setUser_id(2);
+        transaction.setDate("6/5/2016");
+        transaction.setType(true);
+        transaction.setAmount(1);
+        transaction.setState(true);
+        boolean inser = transactionGetService.Save(transaction);
+        Log.d("Save transaction", String.valueOf(inser));
+        */
 
 
 //        TransactionApiService transactionGetService = new TransactionApiService();

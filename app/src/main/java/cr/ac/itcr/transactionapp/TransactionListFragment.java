@@ -8,24 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * Class used to handle the about section in the app
- *
- *
- *
- * @author Yorbi Mendez Soto
- * @version 06/05/2016
- * @since 1.0
- */
-public class FragmentAbout extends Fragment {
+public class TransactionListFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-
-    public FragmentAbout() {
+    public TransactionListFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,7 +25,14 @@ public class FragmentAbout extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment__about, container, false);
+        return inflater.inflate(R.layout.fragment_transaction_list, container, false);
+    }
+
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
+        }
     }
 
     @Override

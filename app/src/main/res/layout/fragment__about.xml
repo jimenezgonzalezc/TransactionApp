@@ -3,12 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="cr.ac.itcr.transactionapp.FragmentAbout">
-
     <LinearLayout
+        android:id="@+id/fragment_about_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
         <ImageView
+            android:contentDescription="TEC Logo"
             android:layout_width="350dp"
             android:layout_height="100dp"
             android:id="@+id/imageView"
@@ -102,5 +103,4 @@
 
         </RelativeLayout>
     </LinearLayout>
-
 </FrameLayout>

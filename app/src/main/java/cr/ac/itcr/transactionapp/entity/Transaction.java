@@ -7,9 +7,16 @@ public class Transaction {
     private int id;
     private int user_id;
     private String date;
+    /**
+     * The type is either credit(true) or debit (false)
+     */
     private boolean type;
     private int amount;
+    /**
+     * State of the transaction, active (true) or non-active (false)
+     */
     private boolean state;
+
 
     public int getId() {
         return id;
@@ -35,7 +42,7 @@ public class Transaction {
         this.date = date;
     }
 
-    public boolean isType() {
+    public boolean getType() {
         return type;
     }
 

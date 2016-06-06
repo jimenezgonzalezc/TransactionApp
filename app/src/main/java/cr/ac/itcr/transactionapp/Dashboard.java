@@ -36,6 +36,7 @@ public class Dashboard extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        //Place first fragment
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.replace(R.id.content_dashboard, new FragmentAbout());
         tx.commit();
@@ -92,7 +93,7 @@ public class Dashboard extends AppCompatActivity
         } else if (id == R.id.nav_sign_out) {
             Intent intent = new Intent(this,LoginActivity.class);
             startActivity(intent);
-            //Diable back button press
+            //Disable back button press
             finish();
         } else if (id == R.id.nav_manage) {
 
