@@ -2,33 +2,24 @@ package cr.ac.itcr.transactionapp.api;
 
 import android.os.AsyncTask;
 import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
-
 import javax.net.ssl.HttpsURLConnection;
-
 import cr.ac.itcr.transactionapp.entity.User;
 
-/**
- * Created by car_e on 6/4/2016.
- */
+
 public class UserApiService implements IApi<User> {
     @Override
     public boolean Save(User user) throws ExecutionException, InterruptedException {
@@ -90,7 +81,20 @@ public class UserApiService implements IApi<User> {
 
     @Override
     public boolean Delete(User user) {
-        return false;
+
+        ApiServiceDelete userDeleteService = new ApiServiceDelete();
+
+        userDeleteService.execute(ConstantApi.url + ConstantApi.user + "/delete/" + String.valueOf(user.getId()), "/delete");
+
+        try {
+            return userDeleteService.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return false;
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
@@ -104,10 +108,16 @@ public class UserApiService implements IApi<User> {
             return userGetService.get();
         } catch (InterruptedException e) {
             e.printStackTrace();
+            return null;
         } catch (ExecutionException e) {
             e.printStackTrace();
+            return null;
         }
-        return userGetService.get();
+    }
+
+    @Override
+    public boolean ChangeState(User user) {
+        return false;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -125,7 +135,7 @@ public class UserApiService implements IApi<User> {
                 if (params[1] == "/all") {
                     url = new URL(cadena);
 
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection(); //Abrir la conexión
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestProperty("User-Agent", "Mozilla/5.0" +
                             " (Linux; Android 1.5; es-ES) Ejemplo HTTP");
                     connection.setRequestProperty("Content-Type", "application/json");
@@ -137,8 +147,8 @@ public class UserApiService implements IApi<User> {
 
                     if (responseCode == HttpURLConnection.HTTP_OK) {
 
-                        InputStream in = new BufferedInputStream(connection.getInputStream());  // preparo la cadena de entrada
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(in));  // la introduzco en un BufferedReader
+                        InputStream in = new BufferedInputStream(connection.getInputStream());
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
                         String line;
                         while ((line = reader.readLine()) != null) {
@@ -192,6 +202,7 @@ public class UserApiService implements IApi<User> {
 
             try {
                 url = new URL(params[0]);
+                Log.d("url",String.valueOf(url));
                 JSONObject user = new JSONObject(params[2]);
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -203,10 +214,56 @@ public class UserApiService implements IApi<User> {
 
                 OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
                 writer.write(user.toString());
+                Log.d("user", user.toString());
+
                 writer.flush();
                 writer.close();
 
-                int responseCode=conn.getResponseCode();
+                int responseCode = conn.getResponseCode();
+
+                if (responseCode == HttpsURLConnection.HTTP_OK)
+                    return true;
+                else
+                    return false;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+    }
+
+    public class ApiServiceDelete extends AsyncTask<String, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+
+            URL url;
+
+            try {
+                url = new URL(params[0]);
+                Log.d("url", String.valueOf(url));
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestProperty("User-Agent", "Mozilla/5.0" +
+                        " (Linux; Android 1.5; es-ES) Ejemplo HTTP");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("Accept", "application/json");
+                conn.setRequestMethod("DELETE");
+                conn.connect();
+
+                int responseCode = conn.getResponseCode();
 
                 if (responseCode == HttpsURLConnection.HTTP_OK)
                     return true;
