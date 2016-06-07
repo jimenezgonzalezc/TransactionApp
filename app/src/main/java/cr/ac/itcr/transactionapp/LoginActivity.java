@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity{
     private EditText txtPassword;
     private Button btnLogin;
     private Button btnRegister;
-    private ArrayList<User> userList;
+    public static ArrayList<User> userList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity{
         //Populate Arraylist
         this.userList = new ArrayList<>();
         populateArrayList();
-
+        Dashboard.userList = userList;
         btnLogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,8 +71,6 @@ public class LoginActivity extends AppCompatActivity{
                     if(loged_in != null){//User logged in successful
                         Intent intent = new Intent(getApplicationContext(), Dashboard.class);
                         intent.putExtra("active_user", loged_in.getId());
-                        //Set Dashboard userList
-                        Dashboard.userList = userList;
                         startActivity(intent);
                         finish();
                     }

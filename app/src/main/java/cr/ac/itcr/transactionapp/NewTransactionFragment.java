@@ -1,10 +1,14 @@
 package cr.ac.itcr.transactionapp;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +19,13 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import cr.ac.itcr.transactionapp.entity.Transaction;
+
 
 public class NewTransactionFragment extends Fragment {
     private Spinner spinType;
@@ -22,7 +33,7 @@ public class NewTransactionFragment extends Fragment {
     private RadioButton radioActive;
     private RadioButton radioNonActive;
     private Button btnCreate;
-
+    private int active_user;
     private OnFragmentInteractionListener mListener;
 
     public NewTransactionFragment() {
@@ -37,13 +48,17 @@ public class NewTransactionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getActivity().setTitle("New Transaction");
         // Inflate the layout for this fragment
+        Bundle b = getArguments();
+        active_user = b.getInt("active_user");
         View v =  inflater.inflate(R.layout.fragment_new_transaction, container, false);
         btnCreate = (Button)v.findViewById(R.id.btnCreate);
         radioNonActive = (RadioButton)v.findViewById(R.id.radioNotActive);
         radioActive = (RadioButton)v.findViewById(R.id.radioActive);
         txtAmount = (EditText)v.findViewById(R.id.txtAmount);
         spinType = (Spinner)v.findViewById(R.id.spinType);
+
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext().getApplicationContext(),
                 R.array.type_array, android.R.layout.simple_spinner_item);
@@ -54,12 +69,93 @@ public class NewTransactionFragment extends Fragment {
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("HOLA","Estoy on click aqui");
+                //Set no errors on the edittext
+                setNoErrors();
+                if(isReady()){
+                    Transaction newTrans = new Transaction();
+                    newTrans.setAmount(Integer.valueOf(txtAmount.getText().toString()));
+                    newTrans.setUser_id(active_user);
+                    if(spinType.getSelectedItem().toString().equalsIgnoreCase("Credit")){
+                        newTrans.setType(true);
+                    }else{
+                        newTrans.setType(false);
+                    }
+                    if(radioActive.isSelected()){
+                        newTrans.setState(true);
+                    }else{
+                        newTrans.setState(false);
+                    }
+                    DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
+                    String date = df.format(Calendar.getInstance().getTime());
+                    newTrans.setDate(date);
+                    //Add to the transaction table
+                    //This case list of transactions
+                    Dashboard.transList.add(newTrans);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    // Add the buttons
+                    builder.setNeutralButton("Continue", new DialogInterface.OnClickListener(){
+                        public void onClick(DialogInterface dialog, int id) {
+                            //Fragment manager to manage a fragment transaction
+                            FragmentManager manager = getActivity().getSupportFragmentManager();
+                            FragmentTransaction transaction = manager.beginTransaction();
+                            //Fragment to replace
+                            Fragment f = new TransactionListFragment();
+                            //Prepare bundle to send info the the other fragment
+                            Bundle bundle = new Bundle();
+                            //Send the position of the list item that has been selected
+                            bundle.putInt("active_user",active_user);
+                            f.setArguments(bundle);
+                            transaction.replace(R.id.content_dashboard, f);
+                            //On back then go back to ExamListFragment
+                            transaction.addToBackStack(null);
+                            //Commit transaction
+                            transaction.commit();
+                        }
+                    });
+                    builder.setTitle("Transaction inserted successfully");
+
+                    // Create the AlertDialog
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
             }
         });
         return v;
     }
 
+    public boolean isReady(){
+        if(txtAmount.getText().length() <= 0){
+            txtAmount.setError("Field is empty");
+        }
+        if(radioNonActive.isChecked() || radioActive.isChecked()){
+            return true;
+        }else{
+            showAlert("Status","You must select a status");
+            return false;
+        }
+    }
+
+    public void setNoErrors(){
+        txtAmount.setError(null);
+    }
+
+    public void showAlert(String title,String button){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        // Add the buttons
+        builder.setNeutralButton(button, new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int id) {
+                Log.e("My Alert worked","Show alert hereon ok");
+
+                // User clicked OK button
+            }
+        });
+        builder.setTitle(title);
+
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

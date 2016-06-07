@@ -7,8 +7,16 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+
+import cr.ac.itcr.transactionapp.adapter.TransactionAdapter;
+import cr.ac.itcr.transactionapp.entity.Transaction;
 
 public class TransactionListFragment extends Fragment {
+    private ListView listViewTransactions;
+    private static TransactionAdapter adapter;
 
     private OnFragmentInteractionListener mListener;
 
@@ -24,8 +32,17 @@ public class TransactionListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getActivity().setTitle("Trasactions");
+        setHasOptionsMenu(true);
+        Bundle b = getArguments();
+        int user_id = b.getInt("active_user");
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_transaction_list, container, false);
+        View v = inflater.inflate(R.layout.fragment_transaction_list, container, false);
+        listViewTransactions = (ListView)v.findViewById(R.id.listViewTransactions);
+        //Obtain id from bundle
+        adapter = new TransactionAdapter(getActivity().getApplicationContext(),getMyTransactions(user_id));
+        listViewTransactions.setAdapter(adapter);
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -33,6 +50,16 @@ public class TransactionListFragment extends Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+    }
+
+    public ArrayList<Transaction> getMyTransactions(int user_id){
+        ArrayList<Transaction> myTrans = new ArrayList<>();
+        for(int i=0; i<Dashboard.transList.size();i++){
+            if (Dashboard.transList.get(i).getUser_id() == user_id){
+                myTrans.add(Dashboard.transList.get(i));
+            }
+        }
+        return myTrans;
     }
 
     @Override

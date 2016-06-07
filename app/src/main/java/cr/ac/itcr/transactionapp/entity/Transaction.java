@@ -17,6 +17,10 @@ public class Transaction {
      */
     private boolean state;
 
+    public Transaction(){
+
+    }
+
 
     public int getId() {
         return id;

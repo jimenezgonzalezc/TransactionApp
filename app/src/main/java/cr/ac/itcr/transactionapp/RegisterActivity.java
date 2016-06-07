@@ -45,13 +45,18 @@ public class RegisterActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 emptyErrorMessage();
-                if(canRegister()){
+                if (canRegister()) {
                     User user = newUser();
+                    user.setPassword(txtPassword.getText().toString());
+                    user.setEmail(txtEmail.getText().toString());
+                    user.setDebit(Integer.parseInt(txtDebit.getText().toString()));
+                    user.setUser(txtUsername.getText().toString());
+                    Dashboard.userList.add(user);
                     //Add new user here man
                     Intent intent = new Intent(RegisterActivity.this, Dashboard.class);
                     Bundle bundle = new Bundle();
                     //Sets the active users id
-                    bundle.putInt("active_user",user.getId());
+                    bundle.putInt("active_user", user.getId());
                     //PUt extra params to intent
                     intent.putExtras(bundle);
                     startActivity(intent);
@@ -94,6 +99,7 @@ public class RegisterActivity extends AppCompatActivity{
      */
     public boolean canRegister(){
         ArrayList<User> users = new ArrayList<>();
+        users = Dashboard.userList;
         //Check empty text fields
         if(checkEmpty()){//False if tru (empty)
             return false;
@@ -126,12 +132,17 @@ public class RegisterActivity extends AppCompatActivity{
             setErrorMessage(txtPassword, "This field cannot be empty.");
             return true;
         }
-        if (txtDebit.getText().toString().length() <= 0) {
-            setErrorMessage(txtDebit, "This field cannot be empty.");
-            return true;
-        }else if(Integer.parseInt(txtDebit.getText().toString()) <= 0){
-            setErrorMessage(txtDebit,"This field must be greater than 0");
-            return true;
+        try{
+            if (txtDebit.getText().toString().length() <= 0) {
+                setErrorMessage(txtDebit, "This field cannot be empty.");
+                return true;
+            }else if(Integer.parseInt(txtDebit.getText().toString()) <= 0) {
+                setErrorMessage(txtDebit, "This field must be greater than 0");
+                return true;
+            }
+        }
+        catch (NumberFormatException e){
+            e.printStackTrace();
         }
         if (txtEmail.getText().toString().length() <= 0) {
             setErrorMessage(txtEmail, "This field cannot be empty.");

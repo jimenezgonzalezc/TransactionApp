@@ -7,9 +7,9 @@
             android:icon="@drawable/icon_add"
             android:title="New Transaction" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_my_transactions"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Manage Transactions" />
+            android:title="My Transactions" />
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/icon_sign_out"

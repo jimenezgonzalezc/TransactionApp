@@ -92,22 +92,10 @@ public class TransactionAdapter extends BaseAdapter {
         View v = inflater.inflate(R.layout.fragment_item,parent,false);
         ImageView img;
         TextView txtType, txtState,txtAmount,txtDate;
-        txtType = (TextView)v.findViewById(R.id.txtType);
         txtAmount = (TextView)v.findViewById(R.id.txtAmount);
-        txtState= (TextView)v.findViewById(R.id.txtState);
         txtDate = (TextView)v.findViewById(R.id.txtDate);
         img = (ImageView) v.findViewById(R.id.imgItem);//Do whatever with this
-        if(transactionList.get(position).getType()){
-            txtType.setText("Debit");
-        }else{
-            txtType.setText("Credit");
-        }
         txtAmount.setText(String.valueOf(transactionList.get(position).getAmount()));
-        if(transactionList.get(position).isState()){
-            txtState.setText("Active");
-        }else{
-            txtState.setText("Inactive");
-        }
         txtDate.setText(transactionList.get(position).getDate());
         return v;
     }

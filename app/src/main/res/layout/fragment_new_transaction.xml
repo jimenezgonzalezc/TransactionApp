@@ -3,103 +3,97 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="cr.ac.itcr.transactionapp.NewTransactionFragment">
-
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Transaction"
-            android:id="@+id/lbltitle"
-            android:textColor="#3f51b5"
-            android:textSize="35sp"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            android:layout_gravity="center"
-            />
+        android:layout_height="match_parent">
 
-        <TextView
-            android:layout_marginTop="50dp"
-            android:textColor="#000000"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:textAlignment="center"
-            android:layout_marginLeft="20dp"
-            android:layout_height="50dp"
-            android:id="@+id/txtType"
-            android:hint="Type:"
-            android:textSize="25sp"/>
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:textColor="#000000"
-            android:minWidth="200dp"
-            android:id="@+id/spinType"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:textAlignment="center"
-            android:padding="5dip"
-            android:textSize="30sp"
-            android:layout_gravity="center"
-            />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <EditText
-            android:textColor="#000000"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtAmount"
-            android:inputType="number"
-            android:layout_marginTop="10dp"
-            android:textAlignment="center"
-            android:hint="Amount"
-            android:drawableRight="@drawable/icon_money_bag"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:textSize="30sp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Transaction state:"
-            android:layout_marginTop="20dp"
-            android:layout_gravity="center"
-            android:textColor="#000000"
-            android:textSize="20sp"/>
-        <RadioGroup
-            android:layout_marginTop="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-
-            <RadioButton
-                android:layout_width="150dp"
-                android:textSize="20sp"
-                android:layout_height="wrap_content"
-                android:id="@+id/radioActive"
-                android:text="Active"
-                android:layout_gravity="center"/>
-            <RadioButton
-                android:textSize="20sp"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/radioNotActive"
-                android:text="Not active"
+            <TextView
+                android:layout_marginTop="50dp"
+                android:textColor="#000000"
+                android:layout_width="match_parent"
+                android:textAlignment="center"
+                android:layout_marginLeft="20dp"
+                android:layout_height="50dp"
+                android:id="@+id/txtType"
+                android:hint="Type:"
+                android:textSize="25sp"/>
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:textColor="#000000"
+                android:minWidth="200dp"
+                android:id="@+id/spinType"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:textAlignment="center"
+                android:padding="5dip"
+                android:textSize="30sp"
                 android:layout_gravity="center"
                 />
-        </RadioGroup>
-        <Button
-            android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:text="Create Transaction"
-            android:id="@+id/btnCreate"
-            android:textAlignment="center"
-            android:textSize="25sp"
-            android:textColor="#FFFFFF"
-            android:background="#3f51b5"
-            />
-        </LinearLayout>
+
+            <EditText
+                android:textColor="#000000"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtAmount"
+                android:inputType="number"
+                android:layout_marginTop="10dp"
+                android:textAlignment="center"
+                android:hint="Amount"
+                android:drawableRight="@drawable/icon_dollar"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:textSize="30sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Transaction state:"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:textColor="#000000"
+                android:textSize="20sp"/>
+            <RadioGroup
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <RadioButton
+                    android:layout_width="150dp"
+                    android:textSize="20sp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/radioActive"
+                    android:text="Active"
+                    android:layout_gravity="center"/>
+                <RadioButton
+                    android:textSize="20sp"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/radioNotActive"
+                    android:text="Not active"
+                    android:layout_gravity="center"
+                    />
+            </RadioGroup>
+            <Button
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="Next"
+                android:id="@+id/btnCreate"
+                android:textAlignment="center"
+                android:textSize="25sp"
+                android:textColor="#FFFFFF"
+                android:background="#3f51b5"
+                />
+            </LinearLayout>
+    </ScrollView>
 </FrameLayout>
