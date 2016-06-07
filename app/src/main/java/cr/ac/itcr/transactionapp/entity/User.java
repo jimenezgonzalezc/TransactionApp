@@ -1,9 +1,12 @@
 package cr.ac.itcr.transactionapp.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by car_e on 6/4/2016.
  */
-public class User {
+public class User implements Parcelable {
 
     private int id;
     private String user;
@@ -11,6 +14,18 @@ public class User {
     private String password;
     private int debit;
 
+    public User(int id, String username, String email, String password, int debit){
+        this.id = id;
+        this.user = username;
+        this.email = email;
+        this.password = password;
+        this.debit = debit;
+    }
+
+    //Empty Constructor
+    public User(){
+
+    }
     public int getId() {
         return id;
     }
@@ -49,5 +64,19 @@ public class User {
 
     public void setDebit(int debit) {
         this.debit = debit;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeInt(debit);
+        dest.writeString(user);
+        dest.writeString(password);
+        dest.writeString(email);
     }
 }

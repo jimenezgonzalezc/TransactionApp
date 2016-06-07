@@ -16,11 +16,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
+import cr.ac.itcr.transactionapp.entity.User;
+
 public class Dashboard extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         FragmentAbout.OnFragmentInteractionListener,
         NewTransactionFragment.OnFragmentInteractionListener{
-
+        public static ArrayList<User> userList;
+        private int active_user_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +42,8 @@ public class Dashboard extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        //Get intent data
+        active_user_id = getIntent().getIntExtra("active_user",0);
         //Place first fragment
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.replace(R.id.content_dashboard, new FragmentAbout());

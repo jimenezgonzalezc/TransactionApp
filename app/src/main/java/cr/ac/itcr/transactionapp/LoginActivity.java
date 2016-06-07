@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -36,6 +37,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cr.ac.itcr.transactionapp.entity.User;
+
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
@@ -47,29 +50,32 @@ public class LoginActivity extends AppCompatActivity{
     private EditText txtPassword;
     private Button btnLogin;
     private Button btnRegister;
+    private ArrayList<User> userList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        txtPassword = (EditText)findViewById(R.id.txtPassword);
-        txtUsername = (EditText)findViewById(R.id.txtUsername);
+        txtPassword = (EditText) findViewById(R.id.txtPassword);
+        txtUsername = (EditText) findViewById(R.id.txtUsername);
         btnLogin = (Button) findViewById(R.id.btnSignIn);
+        //Populate Arraylist
+        this.userList = new ArrayList<>();
+        populateArrayList();
+
         btnLogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                emptyErrorMessage();
                 if(login()){
-                    Bundle b = new Bundle();
-                    b.putString("user","user_logged_in_object_here");
-                    Log.e("LoginActivity","Good to go");
-                    Intent intent = new Intent(getApplicationContext(), Dashboard.class);
-                    startActivity(intent);
-                    finish();
-                    //Cant log in
-                }else{
-                    Log.e("LoginActivity","Cant log in...but go ahead and go??");
-                    //Intent intent = new Intent(getApplicationContext(), Dashboard.class);
-                    //startActivity(intent);
-                    //Log In here
+                    User loged_in = getUserLogged();
+                    if(loged_in != null){//User logged in successful
+                        Intent intent = new Intent(getApplicationContext(), Dashboard.class);
+                        intent.putExtra("active_user", loged_in.getId());
+                        //Set Dashboard userList
+                        Dashboard.userList = userList;
+                        startActivity(intent);
+                        finish();
+                    }
                 }
             }
         });
@@ -77,12 +83,55 @@ public class LoginActivity extends AppCompatActivity{
         btnRegister.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("LoginActivity","Going to Register??");
-                Intent intent = new Intent(getApplicationContext(),RegisterActivity.class);
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
             }
         });
+    }
 
+    /**
+     * Populate an arrayList for testing
+     */
+    public void populateArrayList(){
+        userList.add(new User(1, "yorbigmendez", "yorbigmendez@gmail.com", "123", 600));
+        userList.add(new User(2,"abc","abc@gmail.com","123",300));
+        userList.add(new User(3, "ale", "alejandra_rodriguez@gmail.com", "123", 700));
+    }
+
+    /**
+     * Gets the user logged in base on username and password
+     * if user doesnt exist, edittext will display error message
+     * @return User logged in or null if user couldnt log in
+     */
+    public User getUserLogged(){
+        String username = txtUsername.getText().toString();
+        String pass = txtPassword.getText().toString();
+        for(int i=0; i<userList.size(); i++){
+            if(userList.get(i).getUser().equals(username)){
+                if(userList.get(i).getPassword().equals(pass)){
+                    return userList.get(i);
+                }else{
+                    setErrorMessage(txtPassword,"Invalid password");
+                    return null;
+                }
+            }
+        }
+        setErrorMessage(txtUsername, "Username invalid");
+        return null;
+    }
+
+    /**
+     * Empties all the edittext to no show errors
+     */
+    public void emptyErrorMessage(){ txtUsername.setError(null); txtPassword.setError(null);}
+
+    /**
+     * Sets and error message to a give EditText
+     * @param txt EditText to display message
+     * @param errorMsg String error message to display
+     */
+    public void setErrorMessage(EditText txt, String errorMsg){
+        txt.setError(errorMsg);
     }
 
     /**
@@ -90,8 +139,13 @@ public class LoginActivity extends AppCompatActivity{
      * @return true if can log in, false otherwise.
      */
     public boolean login(){
-        if( txtPassword.getText().toString().equals("") || txtUsername.getText().toString().equals("")){
-            showAlert("Empty","Please fill the empty spaces");
+        //No empty spaces
+        if(txtUsername.getText().toString().equals("")) {
+            setErrorMessage(txtUsername, "This field cant be empty");
+            return false;
+        }
+        if(txtPassword.getText().toString().equals("")){
+            setErrorMessage(txtPassword,"This field cant be empty");
             return false;
         }
         return true;

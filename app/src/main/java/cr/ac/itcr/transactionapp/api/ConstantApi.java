@@ -4,8 +4,8 @@ package cr.ac.itcr.transactionapp.api;
  * Created by car_e on 6/4/2016.
  */
 public class ConstantApi {
-    public static final String ip = "192.168.43.44";
-    public static final String port = "8080";
+    public static final String ip = "172.24.180.125";
+    public static final String port = "81";
     public static final String xampp = "/TransactionManagement/public";
 
     public static final String url = "http://" + ip + ":" + port + xampp + "/api/";

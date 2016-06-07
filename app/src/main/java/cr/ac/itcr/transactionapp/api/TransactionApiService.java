@@ -27,7 +27,7 @@ public class TransactionApiService implements IApi<Transaction> {
         try {
             jsonObject.put("user_id", transaction.getUser_id());
             jsonObject.put("date", transaction.getDate());
-            jsonObject.put("type", transaction.isType());
+            jsonObject.put("type", transaction.getType());
             jsonObject.put("amount", transaction.getAmount());
             jsonObject.put("state", transaction.isState());
             ApiServicePost transactionPostService = new ApiServicePost();
@@ -56,7 +56,7 @@ public class TransactionApiService implements IApi<Transaction> {
             jsonObject.put("id", transaction.getId());
             jsonObject.put("user_id", transaction.getUser_id());
             jsonObject.put("date", transaction.getDate());
-            jsonObject.put("type", transaction.isType());
+            jsonObject.put("type", transaction.getType());
             jsonObject.put("amount", transaction.getAmount());
             jsonObject.put("state", transaction.isState());
 
