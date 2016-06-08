@@ -27,6 +27,7 @@ public class LoginActivity extends AppCompatActivity{
     private Button btnLogin;
     private Button btnRegister;
     public static ArrayList<User> userList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,18 +36,20 @@ public class LoginActivity extends AppCompatActivity{
         txtUsername = (EditText) findViewById(R.id.txtUsername);
         btnLogin = (Button) findViewById(R.id.btnSignIn);
         //Populate Arraylist
-        this.userList = new ArrayList<>();
         populateArrayList();
         Dashboard.userList = userList;
+
+
+
         btnLogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 emptyErrorMessage();
                 if(login()){
-                    User loged_in = getUserLogged();
-                    if(loged_in != null){//User logged in successful
+                    User logged_in = getUserLogged();
+                    if(logged_in != null){//User logged in successful
                         Intent intent = new Intent(getApplicationContext(), Dashboard.class);
-                        intent.putExtra("active_user", loged_in.getId());
+                        intent.putExtra("active_user", logged_in.getId());
                         startActivity(intent);
                         finish();
                     }
@@ -67,6 +70,7 @@ public class LoginActivity extends AppCompatActivity{
      * Populate an arrayList for testing
      */
     public void populateArrayList(){
+        this.userList = new ArrayList<>();
         userList.add(new User(1, "yorbigmendez", "yorbigmendez@gmail.com", "123", 600));
         userList.add(new User(2,"abc","abc@gmail.com","123",300));
         userList.add(new User(3, "ale", "alejandra_rodriguez@gmail.com", "123", 700));

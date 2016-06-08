@@ -52,6 +52,7 @@ public class NewTransactionFragment extends Fragment {
         // Inflate the layout for this fragment
         Bundle b = getArguments();
         active_user = b.getInt("active_user");
+
         View v =  inflater.inflate(R.layout.fragment_new_transaction, container, false);
         btnCreate = (Button)v.findViewById(R.id.btnCreate);
         radioNonActive = (RadioButton)v.findViewById(R.id.radioNotActive);
@@ -88,6 +89,10 @@ public class NewTransactionFragment extends Fragment {
                     DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
                     String date = df.format(Calendar.getInstance().getTime());
                     newTrans.setDate(date);
+                    //Disminuir saldo del mae....
+
+                    
+                    //Access to api and save transaction
                     //Add to the transaction table
                     //This case list of transactions
                     Dashboard.transList.add(newTrans);
@@ -140,6 +145,7 @@ public class NewTransactionFragment extends Fragment {
             showAlert("Status","You must select a status");
             return false;
         }
+        //If de que tenga suficiente saldo para hacer la transacción
     }
 
     public void setNoErrors(){

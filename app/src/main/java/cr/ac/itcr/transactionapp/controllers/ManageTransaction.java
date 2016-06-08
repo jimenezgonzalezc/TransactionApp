@@ -51,6 +51,7 @@ public class ManageTransaction extends Fragment {
         getActivity().setTitle("Manage Transaction");
         // Inflate the layout for this fragment
         Bundle b = getArguments();
+        //Get from API active transaction
         //Get the active transaction
         active_transaction = getTransObject(b.getInt("active_transaction"));
         // Inflate the layout for this fragment
@@ -172,8 +173,8 @@ public class ManageTransaction extends Fragment {
             spinType.setSelection(0);//It is credit
         }else spinType.setSelection(1);//It is debit
         if(active_transaction.isState()){//It is active
-            radioActive.setSelected(true);
-        }else radioNotActive.setSaveEnabled(true);
+            radioActive.setChecked(true);
+        }else radioNotActive.setChecked(true);
     }
 
     /**
@@ -186,13 +187,8 @@ public class ManageTransaction extends Fragment {
         alertDialog.setMessage("Are you sure you want to delete this transaction?");
         alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                for (int i = 0; i <Dashboard.transList.size();i++){
-                    if(active_transaction == Dashboard.transList.get(i)){
-                        //Remove transaction
-                        Dashboard.transList.remove(i);
-                        getActivity().onBackPressed();
-                    }
-                }
+                    //Erase transaction with active_transaction_id
+                    getActivity().onBackPressed();
             }
         });
         alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

@@ -23,6 +23,7 @@ public class RegisterActivity extends AppCompatActivity{
     private EditText txtDebit;
     private Button btnRegister;
     private ArrayList<User> arrayUsers;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,10 +31,14 @@ public class RegisterActivity extends AppCompatActivity{
         setContentView(R.layout.activity_register);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         txtUsername = (EditText)findViewById(R.id.txtUsername);
         txtPassword= (EditText)findViewById(R.id.txtPassword);
         txtEmail = (EditText)findViewById(R.id.txtEmail);
         txtDebit = (EditText)findViewById(R.id.txtDebit);
+        //Get form API
+        //Populate here
+        arrayUsers = new ArrayList<>();
 
         btnRegister = (Button)findViewById(R.id.btnRegister);
         btnRegister.setOnClickListener(new View.OnClickListener() {
@@ -89,15 +94,13 @@ public class RegisterActivity extends AppCompatActivity{
      * @return True if it can register, false otherwise;
      */
     public boolean canRegister(){
-        ArrayList<User> users = new ArrayList<>();
-        users = Dashboard.userList;
         //Check empty text fields
         if(checkEmpty()){//False if tru (empty)
             return false;
         }
         //Check availability for username
-        for(int i=0; i<users.size(); i++){
-            if(users.get(i).getUser().equals(txtUsername.getText().toString())){
+        for(int i=0; i<arrayUsers.size(); i++){
+            if(arrayUsers.get(i).getUser().equals(txtUsername.getText().toString())){
                 setErrorMessage(txtUsername,"Username unavailable");
                 return false;
             }

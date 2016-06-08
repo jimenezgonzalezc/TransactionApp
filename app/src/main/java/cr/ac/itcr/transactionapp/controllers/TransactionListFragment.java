@@ -24,7 +24,6 @@ import cr.ac.itcr.transactionapp.entity.Transaction;
 public class TransactionListFragment extends Fragment {
     private ListView listViewTransactions;
     private static TransactionAdapter adapter;
-
     private OnFragmentInteractionListener mListener;
 
     public TransactionListFragment() {
@@ -47,9 +46,12 @@ public class TransactionListFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_transaction_list, container, false);
         listViewTransactions = (ListView)v.findViewById(R.id.listViewTransactions);
+        //POpulate the list of my transactions
+
         //Obtain id from bundle
         adapter = new TransactionAdapter(getActivity().getApplicationContext(),getMyTransactions(user_id));
         listViewTransactions.setAdapter(adapter);
+
         listViewTransactions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -57,9 +59,11 @@ public class TransactionListFragment extends Fragment {
                 FragmentTransaction transaction = manager.beginTransaction();
                 Fragment f = new ManageTransaction();
                 Bundle bundle = new Bundle();
+                //Obtener id del item seleccionado
+                //From api transactions list
                 bundle.putInt("active_transaction",Dashboard.transList.get(position).getId());
                 f.setArguments(bundle);
-                transaction.replace(R.id.content_dashboard,f);
+                transaction.replace(R.id.content_dashboard, f);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
@@ -104,8 +108,11 @@ public class TransactionListFragment extends Fragment {
                 //Fragment manager to manage a fragment transaction
                 FragmentManager manager = getActivity().getSupportFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
+                Bundle bundle = new Bundle();
+                bundle.putInt("active_user",Dashboard.active_user_id);
                 //Fragment to replace
                 Fragment f = new NewTransactionFragment();
+                f.setArguments(bundle);
                 transaction.replace(R.id.content_dashboard, f);
                 //On back then go back to TransactionList
                 transaction.addToBackStack(null);

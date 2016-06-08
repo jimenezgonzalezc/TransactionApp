@@ -48,6 +48,7 @@ public class Dashboard extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         //Get intent data
         active_user_id = getIntent().getIntExtra("active_user",1);
+        //Get transactionlisty from the api
         populateTransList();
 
         //Place first fragment
