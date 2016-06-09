@@ -17,14 +17,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
-
+import android.widget.Toast;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
-
+import java.util.concurrent.ExecutionException;
 import cr.ac.itcr.transactionapp.R;
+import cr.ac.itcr.transactionapp.api.TransactionApiService;
+import cr.ac.itcr.transactionapp.api.UserApiService;
 import cr.ac.itcr.transactionapp.entity.Transaction;
-
+import cr.ac.itcr.transactionapp.entity.User;
 
 public class NewTransactionFragment extends Fragment {
     private Spinner spinType;
@@ -65,6 +68,7 @@ public class NewTransactionFragment extends Fragment {
                 R.array.type_array, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         // Apply the adapter to the spinner
         spinType.setAdapter(adapter);
         btnCreate.setOnClickListener(new View.OnClickListener() {
@@ -95,7 +99,24 @@ public class NewTransactionFragment extends Fragment {
                     //Access to api and save transaction
                     //Add to the transaction table
                     //This case list of transactions
-                    Dashboard.transList.add(newTrans);
+                    try {
+                        User u = getUser();
+                        if (newTrans.getAmount() > u.getDebit()) {
+                            Toast.makeText(getActivity().getApplicationContext(), "The transaction amount exceeds the user amount", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        else{
+                        u.setDebit(u.getDebit()-newTrans.getAmount());
+                        updateUser(u);
+                        }
+
+                        Dashboard.transList.add(newTrans);
+                        saveTransaction(newTrans);
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     // Add the buttons
@@ -127,6 +148,31 @@ public class NewTransactionFragment extends Fragment {
             }
         });
         return v;
+    }
+
+    /**
+     * Store Transaction in the data base
+     */
+    public void saveTransaction(Transaction transaction) {
+        TransactionApiService transactionGetService = new TransactionApiService();
+        transactionGetService.Save(transaction);
+    }
+
+    /**
+     * Get user from data base
+     */
+    public User getUser() throws ExecutionException, InterruptedException {
+        UserApiService userApiService = new UserApiService();
+        ArrayList<User> u = userApiService.GetUser(active_user);
+        return u.get(0);
+    }
+
+    /**
+     * Update user in the data base
+     */
+    public void updateUser(User user) {
+        UserApiService userApiService = new UserApiService();
+        userApiService.Update(user);
     }
 
     /**

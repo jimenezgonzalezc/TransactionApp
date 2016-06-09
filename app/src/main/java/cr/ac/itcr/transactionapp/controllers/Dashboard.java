@@ -13,10 +13,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import java.util.ArrayList;
-
+import java.util.concurrent.ExecutionException;
 import cr.ac.itcr.transactionapp.R;
+import cr.ac.itcr.transactionapp.api.TransactionApiService;
 import cr.ac.itcr.transactionapp.entity.Transaction;
 import cr.ac.itcr.transactionapp.entity.User;
 
@@ -25,7 +25,8 @@ public class Dashboard extends AppCompatActivity
         FragmentAbout.OnFragmentInteractionListener,
         TransactionListFragment.OnFragmentInteractionListener,
         NewTransactionFragment.OnFragmentInteractionListener,
-        ManageTransaction.OnFragmentInteractionListener{
+        ManageTransaction.OnFragmentInteractionListener,
+MyInfoFragment.OnFragmentInteractionListener{
     public static ArrayList<User> userList;
     public static ArrayList<Transaction> transList;
     public static int active_user_id;
@@ -49,7 +50,13 @@ public class Dashboard extends AppCompatActivity
         //Get intent data
         active_user_id = getIntent().getIntExtra("active_user",1);
         //Get transactionlisty from the api
-        populateTransList();
+        try {
+            populateTransList();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         //Place first fragment
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
@@ -60,20 +67,11 @@ public class Dashboard extends AppCompatActivity
     /**
      * Creates a temporary arraylist of transactions, simulates the access from the api for simple uses.
      */
-    public void populateTransList(){
+    public void populateTransList() throws ExecutionException, InterruptedException {
         transList = new ArrayList<>();
-        int []amount = {100,200,300,400,500,600,700,800,900,1000};
-        Transaction temp ;
-        for(int i=0; i<10;i++){
-            temp = new Transaction();
-            temp.setAmount(amount[i]);
-            temp.setDate("Feb 13 2010");
-            temp.setId(i);
-            temp.setUser_id(1);
-            temp.setState(false);
-            temp.setType(true);
-            transList.add(temp);
-        }
+
+        TransactionApiService transactionGetService = new TransactionApiService();
+        transList = transactionGetService.GetByUser(Dashboard.active_user_id);
     }
 
     @Override
@@ -147,6 +145,19 @@ public class Dashboard extends AppCompatActivity
             newTransFrag.setArguments(bundle);
             tx.replace(R.id.content_dashboard, newTransFrag);
             tx.commit();
+        }
+        else if (id == R.id.nav_info) {
+            //Add a new transaction, get FragmentTransaction
+            FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
+            //Bundle to set params
+            Bundle bundle = new Bundle();
+            bundle.putInt("active_user", active_user_id);
+            //Add fragment new transaction
+            Fragment newTransFrag = new MyInfoFragment();
+            newTransFrag.setArguments(bundle);
+            tx.replace(R.id.content_dashboard, newTransFrag);
+            tx.commit();
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

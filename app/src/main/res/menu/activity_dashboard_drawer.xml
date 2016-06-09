@@ -11,6 +11,10 @@
             android:icon="@drawable/ic_menu_manage"
             android:title="My Transactions" />
         <item
+            android:id="@+id/nav_info"
+            android:icon="@drawable/icon_info"
+            android:title="My Information" />
+        <item
             android:id="@+id/nav_about"
             android:icon="@drawable/icon_sign_out"
             android:title="About" />

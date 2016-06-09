@@ -12,12 +12,6 @@ import cr.ac.itcr.transactionapp.R;
 
 /**
  * Class used to handle the about section in the app
- *
- *
- *
- * @author Yorbi Mendez Soto
- * @version 06/05/2016
- * @since 1.0
  */
 public class FragmentAbout extends Fragment {
 

@@ -19,8 +19,15 @@ import java.util.concurrent.ExecutionException;
 import javax.net.ssl.HttpsURLConnection;
 import cr.ac.itcr.transactionapp.entity.User;
 
-
+/**
+ * Class with functions about User
+ */
 public class UserApiService implements IApi<User> {
+    /**
+     * Function that save a user in the data base
+     * @param user
+     * @return
+     */
     @Override
     public boolean Save(User user) throws ExecutionException, InterruptedException {
         JSONObject jsonObject = new JSONObject();
@@ -50,6 +57,11 @@ public class UserApiService implements IApi<User> {
         }
     }
 
+    /**
+     * Function that update a user of the data base
+     * @param user
+     * @return boolean
+     */
     @Override
     public boolean Update(User user) {
         JSONObject jsonObject = new JSONObject();
@@ -79,6 +91,11 @@ public class UserApiService implements IApi<User> {
         }
     }
 
+    /**
+     * Function that delete a user in the data base
+     * @param user
+     * @return
+     */
     @Override
     public boolean Delete(User user) {
 
@@ -97,6 +114,12 @@ public class UserApiService implements IApi<User> {
         }
     }
 
+    /**
+     * Function that get all users of the data base
+     * @return
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     @Override
     public ArrayList<User> GetAll() throws ExecutionException, InterruptedException {
 
@@ -120,6 +143,31 @@ public class UserApiService implements IApi<User> {
         return false;
     }
 
+    /**
+     * Function that get a user find by id
+     * @param userId
+     * @return
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    public ArrayList<User> GetUser(int userId) throws ExecutionException, InterruptedException {
+
+        ApiServiceGet userGetService = new ApiServiceGet();
+
+        userGetService.execute(ConstantApi.url + ConstantApi.user + "/get/"+ String.valueOf(userId), "/get");
+        String g = ConstantApi.url + ConstantApi.user + "/get/"+ String.valueOf(userId);
+        Log.d("url", g);
+        try {
+            return userGetService.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////
 
     public class ApiServiceGet extends AsyncTask<String,Void,ArrayList<User>> {
@@ -132,7 +180,7 @@ public class UserApiService implements IApi<User> {
             ArrayList<User> users = new ArrayList<>();
 
             try {
-                if (params[1] == "/all") {
+                //if (params[1] == "/all") {
                     url = new URL(cadena);
 
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -142,7 +190,7 @@ public class UserApiService implements IApi<User> {
                     connection.setRequestProperty("Accept", "application/json");
 
                     int responseCode = connection.getResponseCode();
-
+                    Log.d("code", String.valueOf(responseCode + cadena));
                     StringBuilder result = new StringBuilder();
 
                     if (responseCode == HttpURLConnection.HTTP_OK) {
@@ -168,7 +216,7 @@ public class UserApiService implements IApi<User> {
                             users.add(user);
                         }
                     }
-                }
+                //}
             } catch (MalformedURLException e) {
                 e.printStackTrace();
                 return null;
@@ -202,7 +250,6 @@ public class UserApiService implements IApi<User> {
 
             try {
                 url = new URL(params[0]);
-                Log.d("url",String.valueOf(url));
                 JSONObject user = new JSONObject(params[2]);
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -214,7 +261,6 @@ public class UserApiService implements IApi<User> {
 
                 OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
                 writer.write(user.toString());
-                Log.d("user", user.toString());
 
                 writer.flush();
                 writer.close();
@@ -253,7 +299,6 @@ public class UserApiService implements IApi<User> {
 
             try {
                 url = new URL(params[0]);
-                Log.d("url", String.valueOf(url));
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestProperty("User-Agent", "Mozilla/5.0" +

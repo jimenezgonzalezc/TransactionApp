@@ -7,15 +7,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
 import java.util.ArrayList;
-
+import java.util.concurrent.ExecutionException;
 import cr.ac.itcr.transactionapp.R;
+import cr.ac.itcr.transactionapp.api.UserApiService;
 import cr.ac.itcr.transactionapp.entity.User;
 
-/**
- * @author Yorbi Mendez Soto
- */
 public class RegisterActivity extends AppCompatActivity{
     private EditText txtUsername;
     private EditText txtPassword;
@@ -25,7 +22,7 @@ public class RegisterActivity extends AppCompatActivity{
     private ArrayList<User> arrayUsers;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setTitle("Register");
         setContentView(R.layout.activity_register);
@@ -38,7 +35,15 @@ public class RegisterActivity extends AppCompatActivity{
         txtDebit = (EditText)findViewById(R.id.txtDebit);
         //Get form API
         //Populate here
-        arrayUsers = new ArrayList<>();
+        UserApiService userGetService = new UserApiService();
+        try {
+            arrayUsers = userGetService.GetAll();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        //arrayUsers = new ArrayList<>();
 
         btnRegister = (Button)findViewById(R.id.btnRegister);
         btnRegister.setOnClickListener(new View.OnClickListener() {
@@ -47,7 +52,14 @@ public class RegisterActivity extends AppCompatActivity{
                 emptyErrorMessage();
                 if (canRegister()) {
                     User user = newUser();
-                    Dashboard.userList.add(user);
+                    try {
+                        saveUser(user);
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
                     //Add new user here man
                     Intent intent = new Intent(RegisterActivity.this, Dashboard.class);
                     Bundle bundle = new Bundle();
@@ -61,18 +73,15 @@ public class RegisterActivity extends AppCompatActivity{
                 }
             }
         });
-        //Set arraylist here
+    }
 
-       /* UserApiService userGetService = new UserApiService();
-        try {
-                arrayUsers = userGetService.GetAll();
-                Log.d("get all", String.valueOf(arrayUsers.size()));
-        } catch (ExecutionException e) {
-              e.printStackTrace();
-        } catch (InterruptedException e) {
-                e.printStackTrace();
-        }*/
-
+    /** Save new user in the data base
+     *
+     * @param user
+     */
+    public void saveUser(User user) throws ExecutionException, InterruptedException {
+        UserApiService userService = new UserApiService();
+        userService.Save(user);
     }
 
     /**

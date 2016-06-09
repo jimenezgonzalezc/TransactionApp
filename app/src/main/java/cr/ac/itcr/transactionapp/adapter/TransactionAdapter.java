@@ -1,26 +1,16 @@
 package cr.ac.itcr.transactionapp.adapter;
 
 import android.content.Context;
-import android.media.Image;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-
 import cr.ac.itcr.transactionapp.entity.Transaction;
 import cr.ac.itcr.transactionapp.*;
 
-/**
- * Created by Mendez Soto on 6/5/2016.
- */
 public class TransactionAdapter extends BaseAdapter {
     /**
      * Inflater to inflate the arraylist object

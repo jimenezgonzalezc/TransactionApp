@@ -71,4 +71,14 @@ class UserController extends Controller
 
         return response()->json($user);
     }
+
+    /**
+     * Retunn user find by id
+     *
+     * @param  $id
+     */
+    public function getUser($id) {
+        $user = User::find($id);
+        return response()->json([$user]);
+    }
 }

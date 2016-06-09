@@ -3,9 +3,6 @@ package cr.ac.itcr.transactionapp.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by car_e on 6/4/2016.
- */
 public class User implements Parcelable {
 
     private int id;

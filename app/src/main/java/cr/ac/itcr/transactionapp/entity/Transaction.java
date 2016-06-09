@@ -1,8 +1,5 @@
 package cr.ac.itcr.transactionapp.entity;
 
-/**
- * Created by car_e on 6/4/2016.
- */
 public class Transaction {
     private int id;
     private int user_id;

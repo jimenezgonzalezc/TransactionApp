@@ -29,15 +29,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:minWidth="200dp"
-                android:textColor="#FFFFFF"
                 android:id="@+id/spinType"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:textAlignment="center"
                 android:padding="5dip"
                 android:textSize="30sp"
-                android:layout_gravity="center"
-                />
+                android:layout_gravity="center"/>
 
             <EditText
                 android:layout_width="match_parent"

@@ -3,11 +3,9 @@ package cr.ac.itcr.transactionapp.controllers;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,15 +13,15 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import java.util.ArrayList;
-
+import java.util.concurrent.ExecutionException;
 import cr.ac.itcr.transactionapp.R;
+import cr.ac.itcr.transactionapp.api.TransactionApiService;
+import cr.ac.itcr.transactionapp.api.UserApiService;
 import cr.ac.itcr.transactionapp.entity.Transaction;
-
+import cr.ac.itcr.transactionapp.entity.User;
 
 public class ManageTransaction extends Fragment {
     private OnFragmentInteractionListener mListener;
@@ -35,6 +33,7 @@ public class ManageTransaction extends Fragment {
     private Spinner spinType;
     private EditText txtDate;
     private Transaction active_transaction;
+    private ArrayList<Transaction> myTrans;
 
     public ManageTransaction() {
         // Required empty public constructor
@@ -53,7 +52,14 @@ public class ManageTransaction extends Fragment {
         Bundle b = getArguments();
         //Get from API active transaction
         //Get the active transaction
-        active_transaction = getTransObject(b.getInt("active_transaction"));
+        try {
+            active_transaction = getTransObject(b.getInt("active_transaction"));
+
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_manage_transaction, container, false);
         //Widgets
@@ -83,7 +89,10 @@ public class ManageTransaction extends Fragment {
                     if(spinType.getSelectedItem().toString().equalsIgnoreCase("Credit"))
                         active_transaction.setType(true);
                     else active_transaction.setType(false);
+                    active_transaction.setUser_id(Dashboard.active_user_id);
+                    updateTransaction(active_transaction);
                     Toast.makeText(getActivity().getApplicationContext(), "Saved Successfully", Toast.LENGTH_SHORT).show();
+
                 }
             }
         });
@@ -102,6 +111,10 @@ public class ManageTransaction extends Fragment {
         return v;
     }
 
+    public void updateTransaction(Transaction transaction){
+        TransactionApiService transactionGetService = new TransactionApiService();
+        transactionGetService.Update(transaction);
+    }
     /**
      * Checks to see if the textfields are empty and if state radiogroup is selected
      * @return true: If can can edit in, false otherwise
@@ -143,21 +156,14 @@ public class ManageTransaction extends Fragment {
 
     /**
      * Used to populate a users transaction list
-     * @param user_id int: The id if the user we are gonna get the transactions from
-     * @return ArrayList<Transaction> List of transactions, empty if none
      */
-    public ArrayList<Transaction> getMyTransactions(int user_id){
-        ArrayList<Transaction> myTrans = new ArrayList<>();
-        for(int i=0; i<Dashboard.transList.size();i++){
-            if (Dashboard.transList.get(i).getUser_id() == user_id){
-                myTrans.add(Dashboard.transList.get(i));
-            }
-        }
-        return myTrans;
+    public void getMyTransactions() throws ExecutionException, InterruptedException {
+        TransactionApiService transactionGetService = new TransactionApiService();
+        myTrans = transactionGetService.GetByUser(Dashboard.active_user_id);
     }
 
-    public Transaction getTransObject(int transId){
-        ArrayList<Transaction> myTrans = getMyTransactions(Dashboard.active_user_id);
+    public Transaction getTransObject(int transId) throws ExecutionException, InterruptedException {
+        getMyTransactions();
         for(int i = 0; i < myTrans.size(); i++){
             if(transId==myTrans.get(i).getId()){
                 return myTrans.get(i);
@@ -177,6 +183,7 @@ public class ManageTransaction extends Fragment {
         }else radioNotActive.setChecked(true);
     }
 
+
     /**
     **
      * Alert to show in case of deletion
@@ -188,7 +195,21 @@ public class ManageTransaction extends Fragment {
         alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                     //Erase transaction with active_transaction_id
+                TransactionApiService transactionGetService = new TransactionApiService();
+                transactionGetService.Delete(active_transaction);
+                User u = null;
+                try {
+                    u = getUser();
+                    u.setDebit(u.getDebit()+active_transaction.getAmount());
+                    updateUser(u);
                     getActivity().onBackPressed();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+
             }
         });
         alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -198,6 +219,23 @@ public class ManageTransaction extends Fragment {
         });
         // Showing Alert Message
         alertDialog.show();
+    }
+
+    /**
+     * Get user from data base
+     */
+    public User getUser() throws ExecutionException, InterruptedException {
+        UserApiService userApiService = new UserApiService();
+        ArrayList<User> u = userApiService.GetUser(Dashboard.active_user_id);
+        return u.get(0);
+    }
+
+    /**
+     * Update user in the data base
+     */
+    public void updateUser(User user) {
+        UserApiService userApiService = new UserApiService();
+        userApiService.Update(user);
     }
 
     @Override

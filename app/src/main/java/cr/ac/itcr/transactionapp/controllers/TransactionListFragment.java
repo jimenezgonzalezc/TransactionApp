@@ -8,17 +8,16 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-
 import java.util.ArrayList;
-
+import java.util.concurrent.ExecutionException;
 import cr.ac.itcr.transactionapp.R;
 import cr.ac.itcr.transactionapp.adapter.TransactionAdapter;
+import cr.ac.itcr.transactionapp.api.TransactionApiService;
 import cr.ac.itcr.transactionapp.entity.Transaction;
 
 public class TransactionListFragment extends Fragment {
@@ -49,7 +48,13 @@ public class TransactionListFragment extends Fragment {
         //POpulate the list of my transactions
 
         //Obtain id from bundle
-        adapter = new TransactionAdapter(getActivity().getApplicationContext(),getMyTransactions(user_id));
+        try {
+            adapter = new TransactionAdapter(getActivity().getApplicationContext(),getMyTransactions(user_id));
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         listViewTransactions.setAdapter(adapter);
 
         listViewTransactions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -61,7 +66,8 @@ public class TransactionListFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 //Obtener id del item seleccionado
                 //From api transactions list
-                bundle.putInt("active_transaction",Dashboard.transList.get(position).getId());
+
+                bundle.putInt("active_transaction", Dashboard.transList.get(position).getId());
                 f.setArguments(bundle);
                 transaction.replace(R.id.content_dashboard, f);
                 transaction.addToBackStack(null);
@@ -83,15 +89,19 @@ public class TransactionListFragment extends Fragment {
      * @param user_id int: The id if the user we are gonna get the transactions from
      * @return ArrayList<Transaction> List of transactions, empty if none
      */
-    public ArrayList<Transaction> getMyTransactions(int user_id){
+    public ArrayList<Transaction> getMyTransactions(int user_id) throws ExecutionException, InterruptedException {
         ArrayList<Transaction> myTrans = new ArrayList<>();
-        for(int i=0; i<Dashboard.transList.size();i++){
-            if (Dashboard.transList.get(i).getUser_id() == user_id){
-                myTrans.add(Dashboard.transList.get(i));
-            }
+        TransactionApiService transactionGetService = new TransactionApiService();
+        try {
+            myTrans = transactionGetService.GetByUser(user_id);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         if (myTrans.isEmpty())
             showEmptyDialog();
+        Dashboard.transList = myTrans;
         return myTrans;
     }
 

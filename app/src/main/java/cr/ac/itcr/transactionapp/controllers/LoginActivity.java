@@ -4,17 +4,16 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-
 import java.util.ArrayList;
-
+import java.util.concurrent.ExecutionException;
 import cr.ac.itcr.transactionapp.R;
+import cr.ac.itcr.transactionapp.api.UserApiService;
 import cr.ac.itcr.transactionapp.entity.User;
 
 /**
@@ -36,7 +35,13 @@ public class LoginActivity extends AppCompatActivity{
         txtUsername = (EditText) findViewById(R.id.txtUsername);
         btnLogin = (Button) findViewById(R.id.btnSignIn);
         //Populate Arraylist
-        populateArrayList();
+        try {
+            populateArrayList();
+        } catch (java.lang.InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
         Dashboard.userList = userList;
 
 
@@ -45,9 +50,9 @@ public class LoginActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 emptyErrorMessage();
-                if(login()){
+                if (login()) {
                     User logged_in = getUserLogged();
-                    if(logged_in != null){//User logged in successful
+                    if (logged_in != null) {//User logged in successful
                         Intent intent = new Intent(getApplicationContext(), Dashboard.class);
                         intent.putExtra("active_user", logged_in.getId());
                         startActivity(intent);
@@ -69,11 +74,11 @@ public class LoginActivity extends AppCompatActivity{
     /**
      * Populate an arrayList for testing
      */
-    public void populateArrayList(){
+    public void populateArrayList() throws InterruptedException, ExecutionException {
         this.userList = new ArrayList<>();
-        userList.add(new User(1, "yorbigmendez", "yorbigmendez@gmail.com", "123", 600));
-        userList.add(new User(2,"abc","abc@gmail.com","123",300));
-        userList.add(new User(3, "ale", "alejandra_rodriguez@gmail.com", "123", 700));
+
+        UserApiService userGetService = new UserApiService();
+        userList = userGetService.GetAll();
     }
 
     /**

@@ -95,5 +95,14 @@ class TransactionController extends Controller
         return response()->json($transaction);
     }
 
+    /**
+     * Return transactions from user.
+     *
+     * @param  $id
+     * @return Response
+     */
+    public function getTransactionsByUser($id) {
+        return Transaction::where('transactions.user_id', '=', $id)->get();
+    }
 
 }

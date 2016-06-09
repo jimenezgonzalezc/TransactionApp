@@ -22,6 +22,8 @@ Route::group(['prefix' => 'api'], function () {
     Route::post('user/add', 'UserController@store');
     Route::delete('user/delete/{id}', 'UserController@destroy');
     Route::post('user/update', 'UserController@update');
+    Route::get('user/get/{id}', 'UserController@getUser');
+
 
 
     // Transaction
@@ -30,5 +32,6 @@ Route::group(['prefix' => 'api'], function () {
     Route::delete('transaction/delete/{id}', 'TransactionController@destroy');
     Route::post('transaction/update', 'TransactionController@update');
     Route::get('transaction/changeState/{id}', 'TransactionController@changeState');
+    Route::get('transaction/getTransactionsByUser/{id}', 'TransactionController@getTransactionsByUser');
 
 });

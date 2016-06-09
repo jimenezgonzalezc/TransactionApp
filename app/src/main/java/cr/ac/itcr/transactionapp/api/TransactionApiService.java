@@ -1,7 +1,6 @@
 package cr.ac.itcr.transactionapp.api;
 
 import android.os.AsyncTask;
-import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,8 +18,15 @@ import java.util.concurrent.ExecutionException;
 import javax.net.ssl.HttpsURLConnection;
 import cr.ac.itcr.transactionapp.entity.Transaction;
 
-
+/**
+ * Class with functions about Transaction
+ */
 public class TransactionApiService implements IApi<Transaction> {
+    /**
+     * Function that save a transaction in the data base
+     * @param transaction
+     * @return
+     */
     @Override
     public boolean Save(Transaction transaction) {
         JSONObject jsonObject = new JSONObject();
@@ -49,6 +55,11 @@ public class TransactionApiService implements IApi<Transaction> {
         }
     }
 
+    /**
+     * Function that update a transaction of the data base
+     * @param transaction
+     * @return boolean
+     */
     @Override
     public boolean Update(Transaction transaction) {
         JSONObject jsonObject = new JSONObject();
@@ -79,6 +90,11 @@ public class TransactionApiService implements IApi<Transaction> {
         }
     }
 
+    /**
+     * Function that delete a transaction in the data base
+     * @param transaction
+     * @return
+     */
     @Override
     public boolean Delete(Transaction transaction) {
 
@@ -97,6 +113,12 @@ public class TransactionApiService implements IApi<Transaction> {
         }
     }
 
+    /**
+     * Function that get all transaction of the data base
+     * @return
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     @Override
     public ArrayList<Transaction> GetAll() throws ExecutionException, InterruptedException {
 
@@ -115,6 +137,11 @@ public class TransactionApiService implements IApi<Transaction> {
         }
     }
 
+    /**
+     * Function that change state of the transaction in the data base
+     * @param transaction
+     * @return
+     */
     @Override
     public boolean ChangeState(Transaction transaction) {
         ApiServicePost transactionChangeStateService = new ApiServicePost();
@@ -132,6 +159,30 @@ public class TransactionApiService implements IApi<Transaction> {
         }
     }
 
+    /**
+     * Function that get transaction find by the user id
+     * @param idUser
+     * @return
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    public ArrayList<Transaction> GetByUser(int idUser) throws ExecutionException, InterruptedException {
+
+        ApiServiceGet transactionGetService = new ApiServiceGet();
+
+        transactionGetService.execute(ConstantApi.url + ConstantApi.transaction + "/getTransactionsByUser/" + String.valueOf(idUser), "/all");
+
+        try {
+            return transactionGetService.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////
 
     public class ApiServiceGet extends AsyncTask<String,Void,ArrayList<Transaction>> {
@@ -144,9 +195,9 @@ public class TransactionApiService implements IApi<Transaction> {
             ArrayList<Transaction> transactions = new ArrayList<>();
 
             try {
-                if (params[1] == "/all") {
-                    url = new URL(cadena);
+                //if (params[1] == "/all") {
 
+                    url = new URL(cadena);
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestProperty("User-Agent", "Mozilla/5.0" +
                             " (Linux; Android 1.5; es-ES) Ejemplo HTTP");
@@ -173,7 +224,7 @@ public class TransactionApiService implements IApi<Transaction> {
 
                             Transaction transaction = new Transaction();
                             transaction.setId(jsonObject.getInt("id"));
-                            transaction.setId(jsonObject.getInt("user_id"));
+                            transaction.setUser_id(jsonObject.getInt("user_id"));
                             transaction.setDate(jsonObject.getString("date"));
                             transaction.setType(jsonObject.getBoolean("type"));
                             transaction.setAmount(jsonObject.getInt("amount"));
@@ -181,7 +232,7 @@ public class TransactionApiService implements IApi<Transaction> {
                             transactions.add(transaction);
                         }
                     }
-                }
+                //}
             } catch (MalformedURLException e) {
                 e.printStackTrace();
                 return null;
@@ -216,7 +267,6 @@ public class TransactionApiService implements IApi<Transaction> {
             try {
                 if (params[1] == "/changeState") {
                     url = new URL(params[0]);
-                    Log.d("url", String.valueOf(url));
 
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestProperty("User-Agent", "Mozilla/5.0" +
@@ -236,7 +286,6 @@ public class TransactionApiService implements IApi<Transaction> {
                 else
                 {
                     url = new URL(params[0]);
-                    Log.d("url", String.valueOf(url));
                     JSONObject transaction = new JSONObject(params[2]);
 
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -248,7 +297,6 @@ public class TransactionApiService implements IApi<Transaction> {
 
                     OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
                     writer.write(transaction.toString());
-                    Log.d("Transaction", transaction.toString());
 
                     writer.flush();
                     writer.close();
@@ -287,7 +335,6 @@ public class TransactionApiService implements IApi<Transaction> {
 
             try {
                 url = new URL(params[0]);
-                Log.d("url", String.valueOf(url));
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestProperty("User-Agent", "Mozilla/5.0" +
